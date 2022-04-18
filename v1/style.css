@@ -1,0 +1,33 @@
+.test-item {
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+}
+
+.question-title {
+    text-align: center;
+}
+
+.questionscontainer {
+    margin: 0 auto;
+    /* display: inline-block; */
+    text-align: center;
+}
+
+.choice {
+    margin: 5px;
+    padding: 5px;
+}
+
+#title {
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+#results {
+    margin-bottom: 150px;
+
+}
+
+#results-btn {
+    float:right;
+}
