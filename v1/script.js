@@ -1,4 +1,3 @@
-
 /*
 1. I don’t feel particularly pleased with the way I am. (R) _____
 2. I am intensely interested in other people. _____
@@ -81,78 +80,46 @@ let test = {
 }
 
 function populateTest(test) {
-    title = document.getElementById("title");
-    title.innerHTML = test.testName;
+    $("#title").text(test.testName);
+    $("#title").after("<div class='test-item'></div>".repeat(test.testItems.length));
 
     for (let i = 0; i < test.testItems.length; i++) {
-
-        // console.log(test.testItems[i])
-
-        let testContainer = document.createElement("div")
-        testContainer.className = "test-item";
-
-
-        let qTitle = document.createElement("div");
-        qTitle.className = "question-title";
-        qTitle.innerHTML = test.testItems[i].q;
-
-        testContainer.appendChild(qTitle);
-
-        let questionsContainer = document.createElement("div");
-        questionsContainer.className = "questionscontainer";
-        testContainer.appendChild(questionsContainer);
-
-        let leftLabel = document.createElement("span");
-        leftLabel.className = "left-label";
-        leftLabel.innerHTML = "Strongly diagree";
-
-        questionsContainer.appendChild(leftLabel);
-
-        let qContainer = document.createElement("span");
-        qContainer.className = "qcontainer";
+        $(".test-item").eq(i).append(
+               `<div class="question-title">${test.testItems[i].q}</div>
+                <div class="questionscontainer">
+                    <span class="left-label">Strongly disagree</span>
+                    <span class="qcontainer" id=answers-q${i}></span>
+                    <span class="right-label">Strongly agree</span> 
+                </div>`
+        )
 
         for (let j = 0; j < test.numChoices; j++) {
-            let choice = document.createElement("input");
-            choice.type = "radio"
-            choice.name = `question${i}`;
-            choice.className = "choice"
-            choice.id = `q${i}c${j}`
-            if (j == 0) {
-                choice.checked = true;
-            }
-            qContainer.appendChild(choice)
+            $(`#answers-q${i}`).append(
+                `<input type="radio" name="question${i}" class="choice" id="q${i}c${j}">`
+            )
         }
-
-        questionsContainer.appendChild(qContainer);
-
-        let rightLabel = document.createElement("span");
-        rightLabel.className = "right-label";
-        rightLabel.innerHTML = "Strongly agree";
-
-        questionsContainer.appendChild(rightLabel);
-
-        document.getElementById("test-dynamic").appendChild(testContainer);
+        $(`#q${i}c0`).prop("checked", true)
     }
 }
 
-populateTest(test);
-
-btn = document.getElementById("results-btn");
-btn.addEventListener("click", function () {
+$("#results-btn").click(function () {
     score = 0
 
     for (let i = 0; i < test.testItems.length; i++) {
         for (let j = 0; j < test.numChoices; j++) {
-            if (document.getElementById(`q${i}c${j}`).checked) {
+            if ($(`#q${i}c${j}`).is(":checked")) {
                 score += test.scoringFunction(j, test.testItems[i].weight);
             }
         }
     }
 
     score = score / test.testItems.length;
-    resText = document.getElementById("results-text")
-    resText.innerHTML = `Your happiness score ${score.toFixed(2)}`
+    resText = $("#results-text").text(`Your happiness score ${score.toFixed(2)}`)
 
-    inrepretation = document.getElementById("interpretation")
-    inrepretation.hidden = false;
+    // Remove the hidden attribute
+    inrepretation = $("#interpretation").show()
+})
+
+$(document).ready(function () {
+    populateTest(test);
 })
